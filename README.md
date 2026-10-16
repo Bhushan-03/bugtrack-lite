@@ -1,35 +1,99 @@
-# BugTrack Lite
+# BugTrack Lite — MERN Bug Tracking System
 
-BugTrack Lite is a MERN-stack bug tracking application that helps teams report, organize, and manage software bugs with role-based access control.
+**BugTrack Lite** is a full-stack bug tracking application that helps teams report, manage, and track software bugs in one place. It provides user authentication, team management, bug status tracking, and role-based permissions.
 
-## Features
+## 🌐 Live Demo
 
-- User registration and login using JWT authentication.
-- Password hashing with bcrypt.
-- Create and join teams using invitation codes.
-- Create and view bugs within a team.
-- Track bug priority: Low, Medium, High, and Critical.
-- Track bug status: Open, In Progress, Resolved, and Closed.
-- Restrict bug updates and deletion to team owners and admins.
-- Enforce team-level access control to protect team data.
-- Rate limiting for authentication and team invitation attempts.
-- Responsive React interface.
+**Website:** https://bugtrack-lite-webapp-46r6.vercel.app/
 
-## Technology Stack
+**GitHub Repository:** https://github.com/Bhushan-03/bugtrack-lite
 
-- Frontend: React, Vite, Tailwind CSS, JavaScript
-- Backend: Node.js, Express.js
-- Database: MongoDB with Mongoose
-- Authentication: JSON Web Tokens (JWT), bcrypt
-- Version control: Git and GitHub
+**Backend API:** https://bugtrack-lite-hyae.onrender.com
 
-## Prerequisites
+**API Health Check:** https://bugtrack-lite-hyae.onrender.com/api/health
+
+## ✨ Features
+
+- **User Authentication:** Register and log in securely using password hashing and JWT authentication.
+- **Team Management:** Create teams and join existing teams using invitation codes.
+- **Bug Tracking:** Create, view, update, and delete bug reports.
+- **Bug Priorities:** Organize issues by Low, Medium, High, and Critical priority.
+- **Bug Status Management:** Track bugs through Open, In Progress, Resolved, and Closed statuses.
+- **Role-Based Access Control:** Team owners and admins can edit or delete bugs, while team members can create and view bugs.
+- **Team Data Isolation:** Restricts access to bugs based on team membership.
+- **Protected API Routes:** Authenticate requests and enforce server-side authorization.
+- **Input Validation and Rate Limiting:** Apply request validation and limits to selected sensitive endpoints.
+- **Responsive User Interface:** Manage bugs and teams through a React-based dashboard.
+
+## 🛠️ Tech Stack
+
+**Frontend**
+- React
+- Vite
+- JavaScript
+- Tailwind CSS
+
+**Backend**
+- Node.js
+- Express.js
+- REST API
+
+**Database**
+- MongoDB Atlas
+- Mongoose
+
+**Authentication and Security**
+- JSON Web Tokens (JWT)
+- bcryptjs
+- CORS
+- Express Rate Limit
+
+**Development Tools**
+- Git and GitHub
+- VS Code / Code0
+- OpenAI Codex and ChatGPT for development assistance
+
+## 📁 Project Structure
+
+```text
+bugtrack-lite/
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── AuthScreen.jsx
+│   │   │   └── Dashboard.jsx
+│   │   ├── api.js
+│   │   ├── App.jsx
+│   │   └── index.css
+│   ├── .env.example
+│   └── package.json
+├── server/
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── models/
+│   │   ├── bug.js
+│   │   ├── team.js
+│   │   └── user.js
+│   ├── routes/
+│   │   ├── auth.js
+│   │   ├── bugs.js
+│   │   └── teams.js
+│   ├── .env.example
+│   ├── server.js
+│   └── package.json
+├── .gitignore
+└── README.md
+```
+
+## ⚙️ Run Locally
+
+### Prerequisites
+
+Install the following before starting:
 
 - Node.js and npm
-- A MongoDB database, such as MongoDB Atlas
+- A MongoDB Atlas account or accessible MongoDB instance
 - Git
-
-## Setup and Run
 
 ### 1. Clone the repository
 
@@ -45,94 +109,111 @@ cd server
 npm install
 ```
 
-Copy `.env.example` to `.env` and fill in your own values:
+Create a `.env` file inside the `server` directory using `.env.example` as a reference.
+
+Configure the following variables:
 
 ```env
 MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_long_random_secret
+JWT_SECRET=your_strong_random_secret
 PORT=5000
 CLIENT_URL=http://localhost:5173
 ```
 
-Start the backend:
+Replace the placeholder values with your own configuration. Keep your real `.env` file private and never commit it to GitHub.
+
+### 3. Start the backend
+
+From the `server` directory, run:
 
 ```bash
 npm run dev
 ```
 
-The API runs at `http://localhost:5000`.
+The backend should start at `http://localhost:5000` once the database connection succeeds.
 
-Health check: `http://localhost:5000/api/health`
+Check the API health endpoint:
 
-### 3. Configure the frontend
+```text
+http://localhost:5000/api/health
+```
 
-Open a second terminal from the repository root:
+### 4. Configure the frontend
+
+Open a second terminal from the project root:
 
 ```bash
 cd client
 npm install
 ```
 
-Create `client/.env` using `client/.env.example`:
+Create a `.env` file inside the `client` directory with:
 
 ```env
 VITE_API_URL=http://localhost:5000
 ```
 
-Start the frontend:
+### 5. Start the frontend
+
+From the `client` directory, run:
 
 ```bash
 npm run dev
 ```
 
-Open the local URL printed by Vite, usually `http://localhost:5173`.
+Open the local URL shown by Vite, usually:
 
-## API Overview
+```text
+http://localhost:5173
+```
 
-| Method | Endpoint | Purpose |
-| --- | --- | --- |
-| POST | `/api/auth/register` | Register a user |
-| POST | `/api/auth/login` | Log in |
-| GET | `/api/health` | Check API and database status |
-| GET | `/api/teams` | List teams available to the authenticated user |
-| POST | `/api/teams` | Create a team |
-| POST | `/api/teams/join` | Join a team with an invitation code |
-| GET | `/api/bugs` | List bugs for a team |
-| POST | `/api/bugs` | Create a bug |
-| PATCH | `/api/bugs/:id` | Update a bug, subject to permissions |
-| DELETE | `/api/bugs/:id` | Delete a bug, subject to permissions |
+## 🔐 Roles and Permissions
 
-Protected endpoints require the JWT access token. Bug endpoints use a `teamId` to scope access to the selected team.
+| Action | Owner | Admin | Member |
+|---|---|---|---|
+| View bugs in joined teams | Yes | Yes | Yes |
+| Create bugs | Yes | Yes | Yes |
+| Update bugs | Yes | Yes | No |
+| Delete bugs | Yes | Yes | No |
 
-## Security and Permissions
+Access is enforced by the backend, not just by hiding buttons in the user interface. Users must belong to the relevant team to access its bugs.
 
-- Passwords are hashed before storage.
-- Protected routes require authentication.
-- Team membership is checked before granting access to team resources.
-- Only team owners and admins can update or delete bugs.
-- Authentication and invitation endpoints have rate limits.
-- Environment secrets must not be committed to Git.
+## 🚀 Deployment
 
-## Production Configuration
+BugTrack Lite is deployed using:
 
-Set `VITE_API_URL` to the deployed backend URL when building the frontend. Set `CLIENT_URL` to the deployed frontend's exact origin on the backend. Configure `MONGODB_URI` and `JWT_SECRET` in the backend hosting provider's environment settings. Never publish real credentials.
+- **Frontend:** Vercel
+- **Backend:** Render
+- **Database:** MongoDB Atlas
 
-## Development Tools and AI Development Experience
+The frontend uses `VITE_API_URL` to identify the backend API. The backend uses `CLIENT_URL` to configure the permitted frontend origin for CORS.
 
-OpenAI Codex was used within the Code0 development environment to review and improve BugTrack Lite. ChatGPT was also used as a development assistant during implementation and debugging.
+Production environment variables should be configured in the respective hosting dashboards rather than committed to the repository.
+
+## 🤖 Development Tools and AI Assistance
+
+OpenAI Codex was used within the Code0 development environment to assist with code review and implementation. ChatGPT was also used as a development assistant during implementation and debugging.
 
 ### AI-assisted development tasks
 
-- Reviewed the frontend and backend for bugs, security concerns, and deployment issues.
-- Fixed frontend API request URLs and corrected request parameter scope issues.
+- Reviewed frontend and backend code for bugs, security concerns, and deployment issues.
+- Corrected frontend API request URLs and request parameter scope issues.
 - Implemented role-aware visibility for bug editing and deletion controls.
-- Reviewed team-role response privacy, team switching, and server-side authorization checks.
-- Ran production frontend builds after code changes to verify successful compilation.
+- Reviewed team-role response privacy, team switching, and server-side authorization.
+- Ran production frontend builds to verify successful compilation.
 
-The changes were reviewed during development. Authorization was checked through static code inspection; live API verification remains a separate testing step.
+Code changes were reviewed during development. Static code review and successful builds do not replace comprehensive automated testing or independent security testing.
 
-AI assistance was used to help reason through implementation, debugging, and security checks. Review and test generated changes before relying on them.
+## 🎯 Project Objective
 
-## Author
+The objective of BugTrack Lite is to demonstrate full-stack web development skills, including building REST APIs, integrating a database, implementing authentication, managing team-based data access, enforcing role-based permissions, and deploying a MERN application.
 
-Bhushan Jadhav
+## 👨‍💻 Author
+
+**Bhushan Jadhav**
+
+GitHub: https://github.com/Bhushan-03
+
+---
+
+If you find this project useful, feel free to explore the repository and try the live demo.
